@@ -7,7 +7,7 @@ toast.configure()
 
 function PassGen() {
   let [txt, setTxt] = useState("");
-  let passLen = 10;
+  let passLen = 8;
   const copyToClipboard = () => {
     copy(txt);
     toast.info(`Password Copied!`, {
@@ -17,12 +17,58 @@ function PassGen() {
   };
 
   const passGenerator = () => {
-    let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+~|:;?,.-";
-    let password = "";
-    for (let i = 0; i < passLen; i++) {
-      password += charset[Math.floor(Math.random() * charset.length)];
+    passLen += Math.floor(Math.random() * passLen);
+    let lCaseCharSet = "abcdefghijklmnopqrstuvwxyz",
+      uCaseCharSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      numSet = "0123456789",
+      specialCharSet = "!@#$%^&*_+~|:;?,.-",
+      isStrongPassword = false,
+      hasNum = false,
+      hasLcase = false,
+      hasUcase = false,
+      hasSpecialChar = false,
+      strongPassword = "";
+    while(!isStrongPassword) {
+      let password = "";
+      for (let i = 0; i < passLen; i++) {
+        var tempChars = "";
+        tempChars += lCaseCharSet[Math.floor(Math.random() * lCaseCharSet.length)];
+        tempChars += uCaseCharSet[Math.floor(Math.random() * uCaseCharSet.length)];
+        tempChars += numSet[Math.floor(Math.random() * numSet.length)];
+        tempChars += specialCharSet[Math.floor(Math.random() * specialCharSet.length)];
+        password += tempChars[Math.floor(Math.random() * tempChars.length)];
+      }
+      for (let i = 0; i < passLen; i++) {
+        if (password.includes(`${i}`)) {
+          hasNum = true;
+          break;
+        }
+      }
+      for (let i = "a"; i <= "z"; i++) {
+        if (password.includes(i)) {
+          hasLcase = true;
+          break;
+        }
+      }
+      for (let i = "A"; i <= "Z"; i++) {
+        if (password.includes(i)) {
+          hasUcase = true;
+          break;
+        }
+      }
+      for (let i = 0; i < specialCharSet.length; i++) {
+        if (password.includes(specialCharSet[i])) {
+          hasSpecialChar = true;
+          break;
+        }
+      }
+      if(hasNum && hasLcase && hasUcase && hasSpecialChar)
+      {
+        isStrongPassword = true;
+        strongPassword = password;
+      }
     }
-    txt = setTxt(password);
+    txt = setTxt(strongPassword);
   }
 
 
