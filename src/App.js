@@ -7,14 +7,28 @@ toast.configure()
 
 function PassGen() {
   let [txt, setTxt] = useState("");
+  let [isCopying, setIsCopying] = useState(false);
   let passLen = 8;
   const copyToClipboard = () => {
     copy(txt);
-    toast.info(`Password Copied!`, {
+    !isCopying && txt && toast.info(`Copied Password: ${txt}`, {
       position: toast.POSITION.TOP_CENTER,
       autoClose: 2000
     });
+    !isCopying && copying().then(
+      function (value) {setIsCopying(false)},
+      function (error) {setIsCopying(false)}
+    );
   };
+
+  const copying = async () => {
+    setIsCopying(true);
+    await sleep(2500);
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   const passGenerator = () => {
     passLen += Math.floor(Math.random() * passLen);
@@ -71,7 +85,6 @@ function PassGen() {
     txt = setTxt(strongPassword);
   }
 
-
   return (
     <>
       <div className="col-12 input-group">
@@ -99,7 +112,7 @@ function App() {
           <h2>
             Password generator!
           </h2>
-            <PassGen/>
+          <PassGen />
         </div>
       </div>
     </div>
