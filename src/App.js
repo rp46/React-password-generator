@@ -7,13 +7,14 @@ toast.configure()
 
 function PassGen() {
   let [txt, setTxt] = useState("");
+  let [length, setLength] = useState(8);
   let [isCopying, setIsCopying] = useState(false);
-  let passLen = 8;
+  let passLen = length;
   const copyToClipboard = () => {
     copy(txt);
-    !isCopying && txt && toast.info(`Copied Password: ${txt}`, {
+    !isCopying && txt && toast.info(`Password Copied`, {
       position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000
+      autoClose: 1000
     });
     !isCopying && copying().then(
       function (value) {setIsCopying(false)},
@@ -23,7 +24,7 @@ function PassGen() {
 
   const copying = async () => {
     setIsCopying(true);
-    await sleep(2500);
+    await sleep(1500);
   }
 
   function sleep(ms) {
@@ -31,7 +32,6 @@ function PassGen() {
   }
 
   const passGenerator = () => {
-    passLen += Math.floor(Math.random() * passLen);
     let lCaseCharSet = "abcdefghijklmnopqrstuvwxyz",
       uCaseCharSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
       numSet = "0123456789",
@@ -87,8 +87,13 @@ function PassGen() {
 
   return (
     <>
-      <div className="col-12 input-group">
-        <input id="pwd" className="form-control" name="password" type="text" value={txt} onChange={ e => setTxt(e.target.value) }/>
+      <div className="form-group">
+        <label for="length">Set Password length: </label>
+        <input id="length" className="form-control" name="length" type="number" value={length} onChange={ e => setLength(e.target.value) }/>
+      </div>
+      <br />
+      <div className="input-group">
+        <input id="pwd" className="form-control" name="password" placeholder="Password" type="text" value={txt} onChange={ e => setTxt(e.target.value) }/>
         {document.queryCommandSupported('copy') && <a onClick={copyToClipboard}>
           <div className="input-group-append">
             <span className="input-group-text">
@@ -96,6 +101,9 @@ function PassGen() {
             </span>
           </div>
         </a>}
+      </div>
+      <br />
+      <div className="form-group">
         <a className="btn btn-primary btn-lg btn-block" onClick={passGenerator}>
           Generate new password!
         </a>
@@ -109,10 +117,13 @@ function App() {
     <div className="outer">
       <div className="middle">
         <div className="inner">
+          <div className="marginForMobile">
           <h2>
             Password generator!
           </h2>
+          <br />
           <PassGen />
+          </div>
         </div>
       </div>
     </div>
