@@ -1,3 +1,7 @@
+body {
+  font-family: 'helvetica','Open Sans', sans-serif, Arial;
+}
+
 h2 {
   text-align: center;
   padding-bottom: 5%;
@@ -44,4 +48,12 @@ body {
   .inner {
     width: 90%;
   }
+}
+
+.checkboxLabel {
+  padding-left: 3%;
+}
+
+.checkbox {
+  margin-left: 1%;
 }
