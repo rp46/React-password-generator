@@ -60,75 +60,75 @@ const PassGen = () => {
   }
 
   const passGenerator = () => {
-    let lCaseCharSet = "abcdefghijklmnopqrstuvwxyz",
-      uCaseCharSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-      numSet = "0123456789",
-      specialCharSet = "!@#$%^&*_+~|:;?,.-",
-      isStrongPassword = false,
-      hasNum = false,
-      hasLcase = false,
-      hasUcase = false,
-      hasSpecialChar = false,
-      strongPassword = "";
-    while(!isStrongPassword) {
-      let password = "";
-      for (let i = 0; i < passLen; i++) {
-        var tempChars = "";
-        if(!useNumsOnly) {
-          tempChars += lCaseCharSet[Math.floor(Math.random() * lCaseCharSet.length)];
-          tempChars += uCaseCharSet[Math.floor(Math.random() * uCaseCharSet.length)];
-          if(useSpecialChars) {
-              tempChars += specialCharSet[Math.floor(Math.random() * specialCharSet.length)];
+    if(passLen < 4 || passLen > 100)
+    {
+      alert(`Length of password should be from 4 to 100 only!!!`)
+    } else {
+      let lCaseCharSet = "abcdefghijklmnopqrstuvwxyz",
+        uCaseCharSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        numSet = "0123456789",
+        specialCharSet = "!@#$%^&*_+~|:;?,.-",
+        isStrongPassword = false,
+        hasNum = false,
+        hasLcase = false,
+        hasUcase = false,
+        hasSpecialChar = false,
+        strongPassword = "";
+      while(!isStrongPassword) {
+        let password = "";
+        for (let i = 0; i < passLen; i++) {
+          var tempChars = "";
+          if(!useNumsOnly) {
+            tempChars += lCaseCharSet[Math.floor(Math.random() * lCaseCharSet.length)];
+            tempChars += uCaseCharSet[Math.floor(Math.random() * uCaseCharSet.length)];
+            if(useSpecialChars) {
+                tempChars += specialCharSet[Math.floor(Math.random() * specialCharSet.length)];
+            }
           }
+          tempChars += numSet[Math.floor(Math.random() * numSet.length)];
+          password += tempChars[Math.floor(Math.random() * tempChars.length)];
         }
-        tempChars += numSet[Math.floor(Math.random() * numSet.length)];
-        password += tempChars[Math.floor(Math.random() * tempChars.length)];
-      }
-      for (let i = 0; i < passLen; i++) {
-        if (password.includes(`${i}`)) {
-          hasNum = true;
-          break;
+        password && [...password].forEach(passwordChar => {
+          if(passwordChar >= 0 && passwordChar < 10) {
+            hasNum = true;
+          }
+          if(passwordChar >= 'A' && passwordChar <= 'Z') {
+            hasUcase = true;
+          }
+          if(passwordChar >= 'a' && passwordChar <= 'z') {
+            hasLcase = true;
+          }
+          [...specialCharSet].forEach(specialChar => {
+            if(passwordChar === specialChar) {
+              hasSpecialChar = true;
+            }
+          });
+        });
+        if(hasNum && hasLcase && hasUcase && hasSpecialChar && useSpecialChars && !useNumsOnly) {
+          isStrongPassword = true;
+          strongPassword = password;
+        } else if(hasNum && useNumsOnly) {
+          isStrongPassword = true;
+          strongPassword = password;
+        } else if(hasNum && hasLcase && hasUcase && !hasSpecialChar && !useSpecialChars) {
+          isStrongPassword = true;
+          strongPassword = password;
+        } else {
+            hasNum = false;
+            hasSpecialChar = false;
+            hasUcase = false;
+            hasLcase = false;
         }
       }
-      for (let i = "a"; i <= "z"; i++) {
-        if (password.includes(i)) {
-          hasLcase = true;
-          break;
-        }
-      }
-      for (let i = "A"; i <= "Z"; i++) {
-        if (password.includes(i)) {
-          hasUcase = true;
-          break;
-        }
-      }
-      for (let i = 0; i < specialCharSet.length; i++) {
-        if (password.includes(specialCharSet[i])) {
-          hasSpecialChar = true;
-          break;
-        }
-      }
-      if(hasNum && hasLcase && hasUcase && hasSpecialChar && useSpecialChars && !useNumsOnly) {
-        isStrongPassword = true;
-        strongPassword = password;
-      } else if(hasNum && useNumsOnly) {
-        isStrongPassword = true;
-        strongPassword = password;
-      } else if(hasNum && hasLcase && hasUcase && !hasSpecialChar && !useSpecialChars) {
-        isStrongPassword = true;
-        strongPassword = password;
-      } else {
-          isStrongPassword = false;
-      }
+      txt = setTxt(strongPassword);
     }
-    txt = setTxt(strongPassword);
   }
 
   return (
     <>
       <div className="form-group">
-        <label for="length">Set Password length: </label>
-        <input id="length" className="form-control" name="length" type="number" value={length} onChange={ e => setLength(e.target.value) }/>
+        <label htmlFor="length">Set Password length: </label>
+        <input id="length" className="form-control" name="length" type="number" value={length} onChange={ e => setLength(e.target.value) } />
       </div>
       <div className="input-group">
         <input id="pwd" className="form-control" name="password" placeholder="Password" type="text" value={txt} onChange={ e => setTxt(e.target.value) } disabled />
@@ -143,10 +143,10 @@ const PassGen = () => {
       </div>
       <div>
         <input type="checkbox" defaultChecked={useSpecialChars} id="includeSpecialChars" className="checkbox" onClick={e=>onSpecialCharsChecboxClick(e)} />
-        <label for="includeSpecialChars" className="checkboxLabel">Include Special Characters</label>
+        <label htmlFor="includeSpecialChars" className="checkboxLabel">Include Special Characters</label>
         <br />
         <input type="checkbox" defaultChecked={useNumsOnly} id="onlyNumbers" className="checkbox" onClick={() => setNumsOnly()} />
-        <label for="onlyNumbers" className="checkboxLabel">Use numbers only</label>
+        <label htmlFor="onlyNumbers" className="checkboxLabel">Use numbers only</label>
       </div>
       <br />
       <div className="form-group">
